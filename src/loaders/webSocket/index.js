@@ -1,12 +1,12 @@
 import WebSocket from 'ws';
+import Lobby from 'services/Lobby';
 
 export default async function ({ server }) {
+  const lobby = new Lobby();
   const lobbyWss = new WebSocket.Server({ noServer: true });
-  await require('./lobby').default({ lobbyWss });
+  await require('./lobby').default({ lobbyWss, lobby });
   const roomWss = new WebSocket.Server({ noServer: true });
   await require('./room').default({ roomWss });
-  const gameWss = new WebSocket.Server({ noServer: true });
-  await require('./game').default({ gameWss });
 
   server.on('upgrade', (request, socket, head) => {
     const { url } = request;
@@ -20,12 +20,6 @@ export default async function ({ server }) {
       case '/room': {
         roomWss.handleUpgrade(request, socket, head, (ws) => {
           roomWss.emit('connection', ws, request);
-        });
-        break;
-      }
-      case '/game': {
-        gameWss.handleUpgrade(request, socket, head, (ws) => {
-          gameWss.emit('connection', ws, request);
         });
         break;
       }
