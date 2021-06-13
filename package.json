@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf dist && webpack --mode=production",
-    "dev": "nodemon --exec babel-node src/server.js"
+    "dev": "nodemon --exec babel-node src/server.js",
+    "kill": "lsof -i:5000 | grep LISTEN | awk '{print $2}' | xargs kill -9"
   },
   "author": "ming",
   "license": "ISC",
