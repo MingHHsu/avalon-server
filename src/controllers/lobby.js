@@ -2,18 +2,12 @@ export function lobbyMessageController (message, ws, lobby) {
   const data = JSON.parse(message);
   switch (data.type) {
     case 'ENTER_LOBBY': {
-      const { name } = data.payload;
-      ws.name = name;
       lobby.enterLobby(ws);
-      break;
-    }
-    case 'LEAVE_LOBBY': {
-      lobby.leaveLobby(ws.id);
       break;
     }
     case 'CREATE_ROOM': {
       const { setting } = data.payload;
-      lobby.createRoom(setting);
+      lobby.createRoom(ws, setting);
       break;
     }
     case 'REMOVE_ROOM': {
@@ -23,7 +17,7 @@ export function lobbyMessageController (message, ws, lobby) {
     }
     case 'JOIN_ROOM': {
       const { roomId } = data.payload;
-      lobby.joinRoom(roomId, ws);
+      lobby.joinRoom(ws, roomId);
       break;
     }
   }

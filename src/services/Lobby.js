@@ -12,6 +12,10 @@ export default class Lobby {
     this._getRoomNumber = generateRoomNumber;
   }
 
+  getRoom (roomId) {
+    return this.rooms.find((room) => room.id === roomId);
+  }
+
   getRoomsInfo () {
     return this.rooms.map((room) => room.getRoomInfo());
   }
@@ -25,31 +29,36 @@ export default class Lobby {
   }
 
   leaveLobby (wsId) {
-    this.users = this.users.map((user) => user.id !== wsId);
+    this.users = this.users.filter((user) => user.id !== wsId);
   }
 
-  createRoom (settings) {
+  createRoom (ws, settings) {
     const newRoom = new Room({
       ...settings,
       id: this._getRoomUniqueID(),
       number: this._getRoomNumber()
     });
     this.rooms = [...this.rooms, newRoom];
-    this.broadcast({
-      type: 'ROOM_LIST_CHANGED',
-      payload: this.getRoomsInfo()
-    });
+    ws.send(JSON.stringify({
+      type: 'ROOM_CREATED',
+      payload: newRoom.getRoomDetail()
+    }));
+    this.roomListChanged();
   }
 
   removeRoom (roomId) {
     this.rooms = this.rooms.map((room) => room.id !== roomId);
-    this.broadcast({
-      type: 'ROOM_LIST_CHANGED',
-      payload: this.getRoomsInfo()
-    });
+    this.roomListChanged();
   }
 
   broadcast (data) {
     this.users.forEach((ws) => ws.send(JSON.stringify(data)));
+  }
+
+  roomListChanged () {
+    this.broadcast({
+      type: 'ROOM_LIST_CHANGED',
+      payload: this.getRoomsInfo()
+    });
   }
 }

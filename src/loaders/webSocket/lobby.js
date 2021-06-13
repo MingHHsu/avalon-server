@@ -6,5 +6,6 @@ export default function ({ lobbyWss, lobby }) {
   lobbyWss.on('connection', (ws) => {
     ws.id = lobbyWss.getUniqueID();
     ws.on('message', (message) => lobbyMessageController(message, ws, lobby));
+    ws.on('close', () => lobby.leaveLobby(ws.id));
   });
 };
