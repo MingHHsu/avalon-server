@@ -6,7 +6,7 @@ export default async function ({ server }) {
   const lobbyWss = new WebSocket.Server({ noServer: true });
   await require('./lobby').default({ lobbyWss, lobby });
   const roomWss = new WebSocket.Server({ noServer: true });
-  await require('./room').default({ roomWss });
+  await require('./room').default({ roomWss, lobby });
 
   server.on('upgrade', (request, socket, head) => {
     const { url } = request;
