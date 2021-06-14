@@ -18,9 +18,7 @@ module.exports = (env, argv) => {
     ],
     output: {
       path: prodMode ? paths.distPath : undefined,
-      filename: prodMode
-        ? '[name].[contenthash:8].js'
-        : devMode && 'bundle.js'
+      filename: 'main.bundle.js'
     },
     module: {
       rules: [
