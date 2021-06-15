@@ -9,26 +9,18 @@ export default class Room {
     this.gameHandler = null;
   }
 
-  getRoomInfo () {
+  getRoomInfo (options) {
     return {
       id: this.id,
       name: this.name,
       number: this.number,
-      players: this.players.length
-    };
-  }
-
-  getRoomDetail () {
-    return {
-      id: this.id,
-      name: this.name,
-      number: this.number,
-      players: this._getPlayersInfo()
+      players: options?.detail ? this._getPlayersInfo() : this.players.length
     };
   }
 
   _getPlayersInfo () {
     return this.players.map((ws) => ({
+      id: ws.id,
       name: ws.name
     }));
   }
@@ -50,7 +42,7 @@ export default class Room {
   playersChanged () {
     this.broadcast({
       type: 'PLAYERS_CHANGED',
-      payload: this.getRoomDetail()
+      payload: this.getRoomInfo({ detail: true })
     });
   }
 }

@@ -1,5 +1,5 @@
 import { generateUniqueID } from 'lib/generator';
-import { roomMessageController } from 'controllers/room';
+import { onMessage, onClose } from 'controllers/room';
 
 let index = 1;
 
@@ -8,8 +8,8 @@ export default function ({ roomWss, lobby }) {
   roomWss.on('connection', (ws) => {
     ws.id = roomWss.getUniqueID();
     ws.name = `player ${index}`;
-    ws.on('message', (message) => roomMessageController(message, ws, lobby));
-    ws.on('close', () => ws.room.playerLeave(ws.id));
+    ws.on('message', (message) => onMessage(message, ws, lobby));
+    ws.on('close', () => onClose(ws, lobby));
     index++;
   });
 };

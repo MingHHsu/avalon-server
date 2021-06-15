@@ -1,4 +1,4 @@
-export function lobbyMessageController (message, ws, lobby) {
+export function onMessage (message, ws, lobby) {
   const data = JSON.parse(message);
   switch (data.type) {
     case 'ENTER_LOBBY': {
@@ -8,11 +8,6 @@ export function lobbyMessageController (message, ws, lobby) {
     case 'CREATE_ROOM': {
       const { setting } = data.payload;
       lobby.createRoom(ws, setting);
-      break;
-    }
-    case 'REMOVE_ROOM': {
-      const { roomId } = data.payload;
-      lobby.removeRoom(roomId);
       break;
     }
     case 'JOIN_ROOM': {

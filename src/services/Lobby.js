@@ -41,13 +41,13 @@ export default class Lobby {
     this.rooms = [...this.rooms, newRoom];
     ws.send(JSON.stringify({
       type: 'ROOM_CREATED',
-      payload: newRoom.getRoomDetail()
+      payload: newRoom.getRoomInfo({ detail: true })
     }));
     this.roomListChanged();
   }
 
   removeRoom (roomId) {
-    this.rooms = this.rooms.map((room) => room.id !== roomId);
+    this.rooms = this.rooms.filter((room) => room.id !== roomId);
     this.roomListChanged();
   }
 
